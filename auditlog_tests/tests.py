@@ -2733,3 +2733,12 @@ class MissingModelTest(TestCase):
         history = self.obj.history.latest()
         self.assertEqual(history.changes_dict["text"][1], self.obj.text)
         self.assertEqual(history.changes_display_dict["text"][1], self.obj.text)
+
+
+class LogEntryTableNameTest(TestCase):
+    @override_settings(AUDITLOG_MODEL='CUSTOM_LOG')
+    def test_custom_table_name(self):
+        self.assertEqual(LogEntry._meta.db_table, 'auditlog_customlog')
+
+    def test_default_table_name(self):
+        self.assertEqual(LogEntry._meta.db_table, 'auditlog_logentry')

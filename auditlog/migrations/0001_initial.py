@@ -2,6 +2,7 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
+from ..models import get_log_entry_table_name
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -67,6 +68,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
+                'db_table': get_log_entry_table_name(),
                 "ordering": ["-timestamp"],
                 "get_latest_by": "timestamp",
                 "verbose_name": "log entry",

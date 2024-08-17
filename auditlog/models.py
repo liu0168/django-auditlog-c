@@ -1,3 +1,4 @@
+import re
 import ast
 import contextlib
 import json
@@ -26,6 +27,11 @@ from django.utils.translation import gettext_lazy as _
 from auditlog.diff import mask_str
 
 DEFAULT_OBJECT_REPR = "<error forming object repr>"
+
+RE_NON_ALPHA = re.compile(r'[^a-zA-Z]')
+
+def get_log_entry_table_name():
+    return "auditlog_" + RE_NON_ALPHA.sub('', getattr(settings, 'AUDITLOG_TABLE_NAME', 'logentry')).lower()
 
 
 class LogEntryManager(models.Manager):
@@ -385,10 +391,11 @@ class LogEntry(models.Model):
     objects = LogEntryManager()
 
     class Meta:
+        db_table = get_log_entry_table_name()
         get_latest_by = "timestamp"
         ordering = ["-timestamp"]
-        verbose_name = _("log entry")
-        verbose_name_plural = _("log entries")
+        verbose_name = _("audit log entry")
+        verbose_name_plural = _("audit log entries")
 
     def __str__(self):
         if self.action == self.Action.CREATE:

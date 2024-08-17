@@ -18,6 +18,17 @@ Auditlog is created out of the need for a simple Django app that logs changes to
 
 The core idea of Auditlog is similar to the log from Django's admin. Unlike the log from Django's admin (```django.contrib.admin```) Auditlog is much more flexible. Also, Auditlog saves a summary of the changes in JSON format, so changes can be tracked easily.
 
+Configuration
+-------------
+
+You can customize the database table name for the LogEntry model by adding the following to your Django settings:
+
+```python
+AUDITLOG_TABLE_NAME = 'your_custom_table_name'
+```
+
+If not specified, the default table name 'auditlog_logentry' will be used. Note that table name will always be 'auditlog_' plus the lowercase of AUDITLOG_TABLE_NAME. Do NOT use whitespace, dash, or other chars besides a-zA-Z.
+
 Documentation
 -------------
 
