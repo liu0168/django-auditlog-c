@@ -1,10 +1,20 @@
 import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
+from django.apps import apps
 
 from ..models import get_log_entry_table_name
 
+
+def get_app_label():
+    return apps.get_containing_app_config('auditlog').label
+
 class Migration(migrations.Migration):
+
+    @property
+    def app_label(self):
+        return apps.get_containing_app_config('auditlog').label
+
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("contenttypes", "0001_initial"),
@@ -68,7 +78,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                'db_table': get_log_entry_table_name(),
+                'app_label': get_app_label,
+                'db_table': get_log_entry_table_name,
                 "ordering": ["-timestamp"],
                 "get_latest_by": "timestamp",
                 "verbose_name": "log entry",
